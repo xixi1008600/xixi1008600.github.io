@@ -1,0 +1,471 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>STM32学习模块 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="GPIO概述GPIO,即通用I&#x2F;O(输入&#x2F;输出)端口，是STM32可控制的引脚。STM32芯片的GPIO引脚与外部设备连接起来，可实现与外部通讯、控制外部硬件或者采集外部硬件数据的功能。 GPIO的复用：    STM32F4 有很多的内置外设，这些外设的外部引脚都是与 GPIO 共用的。也就是说，一个引脚可以有很多作用，但是默认为IO口，如果想使用一个 GPIO内置外设的功能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32学习模块">
+<meta property="og:url" content="http://example.com/2023/11/14/STM32%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="GPIO概述GPIO,即通用I&#x2F;O(输入&#x2F;输出)端口，是STM32可控制的引脚。STM32芯片的GPIO引脚与外部设备连接起来，可实现与外部通讯、控制外部硬件或者采集外部硬件数据的功能。 GPIO的复用：    STM32F4 有很多的内置外设，这些外设的外部引脚都是与 GPIO 共用的。也就是说，一个引脚可以有很多作用，但是默认为IO口，如果想使用一个 GPIO内置外设的功能">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/xixi.jpg">
+<meta property="article:published_time" content="2023-11-14T07:53:53.000Z">
+<meta property="article:modified_time" content="2023-11-14T08:15:08.743Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/xixi.jpg"><link rel="shortcut icon" href="D:\Blog\themes\butterfly\source\img\favicon.png"><link rel="canonical" href="http://example.com/2023/11/14/STM32%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9D%97/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'STM32学习模块',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-11-14 16:15:08'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/universe.css"><svg aria-hidden="true" style="position:absolute; overflow:hidden; width:0; height:0"><symbol id="icon-sun" viewBox="0 0 1024 1024"><path d="M960 512l-128 128v192h-192l-128 128-128-128H192v-192l-128-128 128-128V192h192l128-128 128 128h192v192z" fill="#FFD878" p-id="8420"></path><path d="M736 512a224 224 0 1 0-448 0 224 224 0 1 0 448 0z" fill="#FFE4A9" p-id="8421"></path><path d="M512 109.248L626.752 224H800v173.248L914.752 512 800 626.752V800h-173.248L512 914.752 397.248 800H224v-173.248L109.248 512 224 397.248V224h173.248L512 109.248M512 64l-128 128H192v192l-128 128 128 128v192h192l128 128 128-128h192v-192l128-128-128-128V192h-192l-128-128z" fill="#4D5152" p-id="8422"></path><path d="M512 320c105.888 0 192 86.112 192 192s-86.112 192-192 192-192-86.112-192-192 86.112-192 192-192m0-32a224 224 0 1 0 0 448 224 224 0 0 0 0-448z" fill="#4D5152" p-id="8423"></path></symbol><symbol id="icon-moon" viewBox="0 0 1024 1024"><path d="M611.370667 167.082667a445.013333 445.013333 0 0 1-38.4 161.834666 477.824 477.824 0 0 1-244.736 244.394667 445.141333 445.141333 0 0 1-161.109334 38.058667 85.077333 85.077333 0 0 0-65.066666 135.722666A462.08 462.08 0 1 0 747.093333 102.058667a85.077333 85.077333 0 0 0-135.722666 65.024z" fill="#FFB531" p-id="11345"></path><path d="M329.728 274.133333l35.157333-35.157333a21.333333 21.333333 0 1 0-30.165333-30.165333l-35.157333 35.157333-35.114667-35.157333a21.333333 21.333333 0 0 0-30.165333 30.165333l35.114666 35.157333-35.114666 35.157334a21.333333 21.333333 0 1 0 30.165333 30.165333l35.114667-35.157333 35.157333 35.157333a21.333333 21.333333 0 1 0 30.165333-30.165333z" fill="#030835" p-id="11346"></path></symbol></svg><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.css" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.0.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/xixi.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-folder-open"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-book"></i><span> 文檔</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/2023/06/08/test/"><span> 🚀 快速開始</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/img/default_top_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Hexo"><img class="site-icon" src="/img/xixi.jpg"/><span class="site-name">Hexo</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-folder-open"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-book"></i><span> 文檔</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/2023/06/08/test/"><span> 🚀 快速開始</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">STM32学习模块</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-11-14T07:53:53.000Z" title="Created 2023-11-14 15:53:53">2023-11-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-11-14T08:15:08.743Z" title="Updated 2023-11-14 16:15:08">2023-11-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="STM32学习模块"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="GPIO"><a href="#GPIO" class="headerlink" title="GPIO"></a>GPIO</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>GPIO,即通用I&#x2F;O(输入&#x2F;输出)端口，是STM32可控制的引脚。STM32芯片的GPIO引脚与外部设备连接起来，可实现与外部通讯、控制外部硬件或者采集外部硬件数据的功能。</p>
+<p>GPIO的复用：</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAB24_AAAfLYFwhr8831.png?token=null&ts=null" alt="img"></p>
+<p>  STM32F4 有很多的内置外设，这些外设的外部引脚都是与 GPIO 共用的。也就是说，一个引脚可以有很多作用，但是默认为IO口，如果想使用一个 GPIO内置外设的功能引脚，就需要GPIO的复用。比如说串口就是GPIO复用为串口。</p>
+<h2 id="GPIO的工作模式"><a href="#GPIO的工作模式" class="headerlink" title="GPIO的工作模式"></a>GPIO的工作模式</h2><h3 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h3><h4 id="4种输入模式"><a href="#4种输入模式" class="headerlink" title="4种输入模式"></a>4种输入模式</h4><ul>
+<li>浮空输入（即不连接内部上下拉电阻）</li>
+<li>上拉输入</li>
+<li>下拉输入</li>
+<li>模拟输入</li>
+</ul>
+<h4 id="4种输出模式"><a href="#4种输出模式" class="headerlink" title="4种输出模式"></a>4种输出模式</h4><ul>
+<li>开漏输出（带上拉或者下拉）</li>
+<li>复用开漏输出（带上拉或者下拉）</li>
+<li>推挽输出（带上拉或者下拉）</li>
+<li>复用推挽输出（带上拉或者下拉）</li>
+</ul>
+<h4 id="4种最大输出速度"><a href="#4种最大输出速度" class="headerlink" title="4种最大输出速度"></a>4种最大输出速度</h4><ul>
+<li>低速，2MHz</li>
+<li>中速，25MHz</li>
+<li>高速，50MHz</li>
+<li>超高速，100MHz</li>
+</ul>
+<p><strong>速度的配置，就是决定IO口驱动电路的响应速度</strong></p>
+<p>我们需要结合实际情况配置速度，不同速度会有不同的影响。</p>
+<p>功耗与干扰：</p>
+<ul>
+<li>配置高速：输出频率高，噪音大，功耗高，电磁干扰强；</li>
+<li>配置低速：输出频率低，噪音小，功耗低，电磁干扰弱；提高系统EMI（电磁干扰）性能；</li>
+</ul>
+<p>  实际情况中，比如：低功耗的产品，你会考虑功耗。环境不好的场合，通信不稳定，你会考虑电磁干扰（电磁干扰（Electromagnetic Interference，EMI）是干扰电缆信号并降低信号完好性的电子噪音）等。</p>
+<p>速度配置实例：</p>
+<p>  (1) 对于串口来说，加入最大波特率为115200bps，这样只需要用2MHz的GPIO的引脚速度就可以了，省电噪音又小；</p>
+<p>  (2) 对于I2C接口，假如使用400KHz波特率，若想把余量留大一些，2MHz的GPIO引脚速度或许是不够，这时可以选用10MHz的GPIO引脚速度；</p>
+<p>  (3) 对于SPI接口，假如使用18MHz或9MHz的波特率，用10MHz的GPIO口也不够用了，需要选择呢50MHz的GPIO引脚速度;</p>
+<p>  (4) GPIO口设置为输入时，输出驱动电路与端口是断开的，所以这时配置输出速度是无意义的。</p>
+<h3 id="详情分析"><a href="#详情分析" class="headerlink" title="详情分析"></a>详情分析</h3><h4 id="输出配置"><a href="#输出配置" class="headerlink" title="输出配置"></a>输出配置</h4><p>当某引脚配置为输出模式时，内部结构如下图。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/00/rBJlJmJidzyABg8qAAGi5YAujro513.png?token=null&ts=null" alt="img"></p>
+<p>对 I&#x2F;O 端口进行编程作为输出时，内部电路关键工作如下：</p>
+<ul>
+<li>输出缓冲器被打开：<ul>
+<li>开漏模式：输出寄存器中的“0”可激活 N-MOS，而输出寄存器中的“1”会使端口保持高阻态 (Hi-Z)（P-MOS 始终不激活）。</li>
+<li>推挽模式：输出寄存器中的“0”可激活 N-MOS，而输出寄存器中的“1”可激活P-MOS。</li>
+</ul>
+</li>
+<li>施密特触发器输入被打开。</li>
+<li>根据 GPIOx_PUPDR 寄存器中的值决定是否打开弱上拉电阻和下拉电阻对输出数据寄存器的读访问可获取最后的写入值。</li>
+</ul>
+<p><em>说明：</em></p>
+<p>高阻态（英语：High impedance）表示电路中的某个节点具有相对电路中其他点相对更高的阻抗。通俗的讲，可以看作输出（输入）电阻非常大。它的极限状态可以认为悬空（开路）。也就是说理论上高阻态不是悬空，它是对地或对电源电阻极大的状态。</p>
+<p>施密特触发器（英语：Schmitt trigger）是包含正反馈的比较器电路。</p>
+<ul>
+<li>当输入电压高于正向阈值电压，输出为高；</li>
+<li>当输入电压低于负向阈值电压，输出为低；</li>
+<li>当输入在正负向阈值电压之间，输出不改变，也就是说输出由高电准位翻转为低电准位，或是由低电准位翻转为高电准位时所对应的阈值电压是不同的。只有当输入电压发生足够的变化时，输出才会变化，因此将这种元件命名为触发器。<br>施密特触发器可作为波形整形电路，能将模拟信号波形整形为数字电路能够处理的方波波形。</li>
+</ul>
+<p>保护二极管：引脚内部加上这两个保护二极管可以防止引脚外部过高或过低的电压输入。</p>
+<p>保护二极管功能的实现原理：当引脚电压高于VDD时，上方的二极管导通吸收这个电压，当引脚电压低于VSS时，下方的二极管导通，防止不正常电压引入芯片导致芯片烧毁</p>
+<p><strong>推挽电路</strong></p>
+<p>  推挽电路（push-pull）就是两个不同极性晶体管间连接的输出电路。推挽电路采用两个参数相同的功率BJT管（双极结型晶体管（Bipolar Junction Transistor—BJT）常见的NPN或PNP三极管）或MOSFET管（场效应管），以推挽方式存在于电路中，各负责正负半周的波形放大任务，电路工作时，两只对称的功率开关管每次只有一个导通，所以导通损耗小效率高。推挽输出既可以向负载灌电流，也可以从负载抽取电流。</p>
+<p>  在电路设计中，推挽输出是一种很常用的输出模式。推挽输出有很多优点，比如更低的损耗，更安全的输出等。推挽”之意，即为当一个管子推出去时，另一个管子拉回来。输入不同，交替导通。</p>
+<p>举个例子</p>
+<ul>
+<li>当输入信号为高电平的时候，上面的管子导通，下面的管子截止，输出信号为高电平。</li>
+<li>当输入信号为低电平的时候，上面的管子截止，下面的管子导通，输出信号为低电平。</li>
+</ul>
+<h4 id="输入配置"><a href="#输入配置" class="headerlink" title="输入配置"></a>输入配置</h4><p>当某引脚配置为输入模式时，内部结构如下图。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/00/rBJlJmJidzyAbnYbAAFWBuWa0TE929.png?token=null&ts=null" alt="img"></p>
+<p>对 I&#x2F;O 端口进行编程作为输入模式时，内部电路关键工作如下：</p>
+<ul>
+<li>输出缓冲器被关闭</li>
+<li>施密特触发器输入被打开</li>
+<li>根据 GPIOx_PUPDR 寄存器中的值决定是否打开上拉和下拉电阻</li>
+<li>输入数据寄存器每隔 1 个 AHB1 时钟周期对 I&#x2F;O 引脚上的数据进行一次采样</li>
+<li>对输入数据寄存器的读访问可获取 I&#x2F;O 状态</li>
+</ul>
+<p><strong>施密特触发器</strong></p>
+<p>  在电子学中，施密特触发器（英语：Schmitt trigger）是包含正反馈的比较器电路。</p>
+<p>  对于标准施密特触发器，当输入电压高于正向阈值电压，输出为高；当输入电压低于负向阈值电压，输出为低；当输入在正负向阈值电压之间，输出不改变，也就是说输出由高电准位翻转为低电准位，或是由低电准位翻转为高电准位时所对应的阈值电压是不同的。只有当输入电压发生足够的变化时，输出才会变化，因此将这种元件命名为触发器。</p>
+<p>  施密特触发器可作为波形整形电路，能将模拟信号波形整形为数字电路能够处理的方波波形，而且由于施密特触发器具有滞回特性，所以可用于抗干扰，其应用包括在开回路配置中用于抗扰，以及在闭回路正回授&#x2F;负回授配置中用于实现多谐振荡器。</p>
+<h4 id="复用功能配置"><a href="#复用功能配置" class="headerlink" title="复用功能配置"></a>复用功能配置</h4><p>当某引脚配置为复用功能模式时，内部结构如下图。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/00/rBJlJmJidzyAEAnXAAFmBGwR0X0904.png?token=null&ts=null" alt="img"></p>
+<p>对 I&#x2F;O 端口进行编程作为复用功能时：</p>
+<ul>
+<li>可将输出缓冲器配置为开漏或推挽</li>
+<li>输出缓冲器由来自外设的信号驱动（发送器使能和数据）</li>
+<li>施密特触发器输入被打开</li>
+<li>根据 GPIOx_PUPDR 寄存器中的值决定是否打开弱上拉电阻和下拉电阻</li>
+<li>输入数据寄存器每隔 1 个 AHB1 时钟周期对 I&#x2F;O 引脚上的数据进行一次采样</li>
+<li>对输入数据寄存器的读访问可获取 I&#x2F;O 状态</li>
+</ul>
+<h4 id="模拟配置"><a href="#模拟配置" class="headerlink" title="模拟配置"></a>模拟配置</h4><p>当某引脚配置为模拟配置模式时，内部结构如下图。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/00/rBJlJmJidzyAE5hJAAEDDZ_9yvY180.png?token=null&ts=null" alt="img"></p>
+<p>对 I&#x2F;O 端口进行编程作为模拟配置时：</p>
+<ul>
+<li>输出缓冲器被禁止。</li>
+<li>施密特触发器输入停用，I&#x2F;O 引脚的每个模拟输入的功耗变为零。施密特触发器的输出被强制处理为恒定值 (0)。</li>
+<li>弱上拉和下拉电阻被关闭。</li>
+<li>对输入数据寄存器的读访问值为“0”。</li>
+<li>在模拟配置中，I&#x2F;O 引脚不能为 5 V 容忍。</li>
+</ul>
+<h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><p><strong>1、LED硬件设计</strong></p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAXriBAABWrRT2zBQ493.png?token=null&ts=null" alt="img"></p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/00/rBJlJmJidzyAf97pAACEIQwTQko885.png?token=null&ts=null" alt="img"></p>
+<p><strong>2、按键硬件设计</strong></p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAeljSAABnUEq_peI220.png?token=null&ts=null" alt="img"><br><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyACRtbAAEdtRqN-Q4918.png?token=null&ts=null" alt="img"></p>
+<h2 id="寄存器编程"><a href="#寄存器编程" class="headerlink" title="寄存器编程"></a>寄存器编程</h2><p>实现步骤</p>
+<ul>
+<li>使能端口H硬件时钟，可以理解为启动了汽车发动机，汽车才有动力控制行走方向；</li>
+<li>设置PH10引脚为输出模式，可以理解为汽车为前进模式；</li>
+<li>设置PH10引脚电平状态<ul>
+<li>高电平，可以理解为汽车前进</li>
+<li>低电平，可以理解为汽车停止</li>
+</ul>
+</li>
+</ul>
+<h2 id="寄存器边界地址"><a href="#寄存器边界地址" class="headerlink" title="寄存器边界地址"></a>寄存器边界地址</h2><p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAYlvOAAE6yGX9iAA924.png?token=null&ts=null" alt="img"></p>
+<h2 id="寄存器描述"><a href="#寄存器描述" class="headerlink" title="寄存器描述"></a>寄存器描述</h2><p><strong>1、RCC AHB1 外设时钟使能寄存器 (RCC_AHB1ENR)</strong></p>
+<p><em>RCC AHB1 peripheral clock enable register</em></p>
+<p>偏移地址：0x30</p>
+<p>复位值：0x0010 0000</p>
+<p>访问：无等待周期，按字、半字和字节访问。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAG9hqAACH2z32jgo983.png?token=null&ts=null" alt="img"></p>
+<p><strong>2、GPIO 端口模式寄存器 (GPIOx_MODER) (x &#x3D; A…I)</strong></p>
+<p><em>GPIO port mode register</em></p>
+<p>偏移地址：0x00</p>
+<p>复位值：</p>
+<ul>
+<li>0xA800 0000（端口 A）</li>
+<li>0x0000 0280（端口 B）</li>
+<li>0x0000 0000（其它端口）</li>
+</ul>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAEbHZAABk-pvWaQg743.png?token=null&ts=null" alt="img"></p>
+<p><strong>3、GPIO 端口输出类型寄存器 (GPIOx_OTYPER) (x &#x3D; A…I)</strong></p>
+<p><em>GPIO port output type register</em></p>
+<p>偏移地址：0x04</p>
+<p>复位值：0x0000 0000</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAbparAABDxSWNqV4505.png?token=null&ts=null" alt="img"></p>
+<p><strong>4、GPIO 端口输出速度寄存器 (GPIOx_OSPEEDR) (x &#x3D; A…I&#x2F;)</strong></p>
+<p><em>GPIO port output speed register</em></p>
+<p>偏移地址：0x08</p>
+<p>复位值：</p>
+<ul>
+<li>0x0000 00C0（端口 B）</li>
+<li>0x0000 0000（其它端口）</li>
+</ul>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAJmTlAABeSgiTqZ8015.png?token=null&ts=null" alt="img"></p>
+<p><strong>5、GPIO 端口上拉&#x2F;下拉寄存器 (GPIOx_PUPDR) (x &#x3D; A…I&#x2F;)</strong></p>
+<p><em>GPIO port pull-up&#x2F;pull-down register</em></p>
+<p>偏移地址：0x0C</p>
+<p>复位值：</p>
+<ul>
+<li>0x6400 0000（端口 A）</li>
+<li>0x0000 0100（端口 B）</li>
+<li>0x0000 0000（其它端口）</li>
+</ul>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAaUCLAABdzf3nwHM514.png?token=null&ts=null" alt="img"></p>
+<p><strong>6、GPIO 端口输出数据寄存器 (GPIOx_ODR) (x &#x3D; A…I)</strong></p>
+<p><em>GPIO port output data register</em></p>
+<p>偏移地址：0x14</p>
+<p>复位值：0x0000 0000</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAbGILAABDvWHpFrA988.png?token=null&ts=null" alt="img"></p>
+<p><strong>7、GPIO 端口输入数据寄存器 (GPIOx_IDR) (x &#x3D; A…I)</strong></p>
+<p><em>GPIO port input data register</em></p>
+<p>偏移地址：0x10</p>
+<p>复位值：0x0000 XXXX（其中 X 表示未定义）</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyASFGkAABEFdcas38744.png?token=null&ts=null" alt="img"></p>
+<p><strong>8、GPIO 端口置位&#x2F;复位寄存器 (GPIOx_BSRR) (x &#x3D; A…I)</strong></p>
+<p><em>GPIO port bit set&#x2F;reset register</em></p>
+<p>偏移地址：0x18</p>
+<p>复位值：0x0000 0000</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAfetiAAGptnq-Fbw649.png?token=null&ts=null" alt="img"></p>
+<h3 id="参考代码"><a href="#参考代码" class="headerlink" title="参考代码"></a>参考代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f4xx.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RCC_AHB1ENR	        (*(volatile uint32_t *)(0x40023800+0x30))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GPIOH_MODER	        (*(volatile uint32_t *)(0x40020000+0x00))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GPIOH_BSRR		    (*(volatile uint32_t *)(0x40020000+0x18))</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">led_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	RCC_AHB1ENR|=<span class="number">1</span>&lt;&lt;<span class="number">7</span>;</span><br><span class="line">	GPIOH_MODER|=<span class="number">1</span>&lt;&lt;<span class="number">20</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">led_off</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	GPIOH_BSRR=<span class="number">1</span>&lt;&lt;<span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">led_on</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	GPIOH_BSRR=<span class="number">1</span>&lt;&lt;(<span class="number">10</span>+<span class="number">16</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">delay</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">uint32_t</span> i=<span class="number">0x200000</span>;</span><br><span class="line">	<span class="keyword">while</span>(i--);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	led_init();</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		led_on();</span><br><span class="line">		delay();</span><br><span class="line">	</span><br><span class="line">		led_off();</span><br><span class="line">		delay();	  </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="函数接口以及使用"><a href="#函数接口以及使用" class="headerlink" title="函数接口以及使用"></a>函数接口以及使用</h2><h3 id="函数接口说明"><a href="#函数接口说明" class="headerlink" title="函数接口说明"></a>函数接口说明</h3><h4 id="端口时钟使能"><a href="#端口时钟使能" class="headerlink" title="端口时钟使能"></a>端口时钟使能</h4><p>当芯片复位后，端口硬件时钟是默认关闭状态，需要调用__HAL_RCC_GPIOx_CLK_ENABLE函数来打开，例如打开端口A、端口B、端口C硬件时钟示例代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">端口A硬件时钟使能</span><br><span class="line">__HAL_RCC_GPIOA_CLK_ENABLE()</span><br><span class="line"></span><br><span class="line">端口B硬件时钟使能</span><br><span class="line">__HAL_RCC_GPIOB_CLK_ENABLE()</span><br><span class="line"></span><br><span class="line">端口C硬件时钟使能</span><br><span class="line">__HAL_RCC_GPIOC_CLK_ENABLE()</span><br></pre></td></tr></table></figure>
+
+<h4 id="引脚配置"><a href="#引脚配置" class="headerlink" title="引脚配置"></a>引脚配置</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">HAL_GPIO_Init</span><span class="params">(GPIO_TypeDef  *GPIOx, GPIO_InitTypeDef *GPIO_Init)</span></span><br></pre></td></tr></table></figure>
+
+<p>参数：</p>
+<ul>
+<li>GPIOx,指定哪个端口，x为端口号。如当前为端口A，则写GPIOA；当前为端口B，则写GPIOB。</li>
+<li>GPIO_Init，GPIO的配置。</li>
+</ul>
+<p>返回值：无。</p>
+<p>示例1：将GPIOH10配置为输出模式，引脚内部接上拉电阻。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GPIO_InitTypeDef GPIO_Initure;</span><br><span class="line"></span><br><span class="line">GPIO_Initure.Pin=GPIO_PIN_10; 		    <span class="comment">//第10根引脚</span></span><br><span class="line">GPIO_Initure.Mode=GPIO_MODE_OUTPUT_PP;	<span class="comment">//推挽输出</span></span><br><span class="line">GPIO_Initure.Pull=GPIO_PULLUP;		    <span class="comment">//上拉电阻</span></span><br><span class="line">GPIO_Initure.Speed=GPIO_SPEED_HIGH;	    <span class="comment">//高速</span></span><br><span class="line">HAL_GPIO_Init(GPIOH,&amp;GPIO_Initure);	    <span class="comment">//初始化端口H</span></span><br></pre></td></tr></table></figure>
+
+<p>示例2：将GPIOA0配置为输入模式，引脚内部接上拉电阻。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GPIO_InitTypeDef GPIO_Initure;</span><br><span class="line"> </span><br><span class="line">GPIO_Initure.Pin=GPIO_PIN_0;              <span class="comment">//第0根引脚</span></span><br><span class="line">GPIO_Initure.Mode= GPIO_MODE_INPUT;       <span class="comment">//输入模式</span></span><br><span class="line">GPIO_Initure.Pull=GPIO_PULLUP;		      <span class="comment">//上拉电阻</span></span><br><span class="line">GPIO_Initure.Speed=GPIO_SPEED_HIGH;       <span class="comment">//高速</span></span><br><span class="line">HAL_GPIO_Init(GPIOA,&amp;GPIO_Initure);       <span class="comment">//初始化端口A</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="引脚电平输出"><a href="#引脚电平输出" class="headerlink" title="引脚电平输出"></a>引脚电平输出</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">HAL_GPIO_WritePin</span><span class="params">(GPIO_TypeDef* GPIOx, <span class="type">uint16_t</span> GPIO_Pin, GPIO_PinState PinState)</span></span><br></pre></td></tr></table></figure>
+
+<p>参数：</p>
+<ul>
+<li>GPIOx,指定哪个端口，x为端口号。例如当前为端口A，则写GPIOA；当前为端口B，则写GPIOB。</li>
+<li>GPIO_Pin，指定哪个引脚。例如引脚为第9根引脚，则写GPIO_Pin_9。<br>PinState，引脚电平状态。高电平为GPIO_PIN_SET，低电平为GPIO_PIN_RESET。</li>
+</ul>
+<p>返回值：无。</p>
+<p>示例1：将GPIOF9配置为输出高电平。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HAL_GPIO_WritePin(GPIOH,GPIO_PIN_10,GPIO_PIN_SET);</span><br></pre></td></tr></table></figure>
+
+<p>示例2：将GPIOF9配置为输出低电平。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HAL_GPIO_WritePin(GPIOH,GPIO_PIN_10,GPIO_PIN_RESET);</span><br></pre></td></tr></table></figure>
+
+<h4 id="引脚电平反转"><a href="#引脚电平反转" class="headerlink" title="引脚电平反转"></a>引脚电平反转</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">HAL_GPIO_TogglePin</span><span class="params">(GPIO_TypeDef* GPIOx, <span class="type">uint16_t</span> GPIO_Pin)</span></span><br></pre></td></tr></table></figure>
+
+<p>参数：</p>
+<ul>
+<li>GPIOx,指定哪个端口，x为端口号。例如当前为端口A，则写GPIOA；当前为端口B，则写GPIOB。</li>
+<li>GPIO_Pin，指定哪个引脚。例如引脚为第9根引脚，则写GPIO_Pin_9。</li>
+</ul>
+<p>返回值：无。</p>
+<p>示例1：将GPIOH10配置为输出电平反转。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HAL_GPIO_TogglePin (GPIOH,GPIO_PIN_10);</span><br></pre></td></tr></table></figure>
+
+<h4 id="读取引脚电平"><a href="#读取引脚电平" class="headerlink" title="读取引脚电平"></a>读取引脚电平</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GPIO_PinState <span class="title function_">HAL_GPIO_ReadPin</span><span class="params">(GPIO_TypeDef* GPIOx, <span class="type">uint16_t</span> GPIO_Pin)</span></span><br></pre></td></tr></table></figure>
+
+<p>参数：</p>
+<ul>
+<li>GPIOx,指定哪个端口，x为端口号。例如当前为端口A，则写GPIOA；当前为端口B，则写GPIOB。</li>
+<li>GPIO_Pin，指定哪个引脚。例如引脚为第9根引脚，则写GPIO_Pin_9。</li>
+</ul>
+<p>返回值：引脚电平状态。</p>
+<ul>
+<li>高电平，GPIO_PIN_SET；</li>
+<li>低电平，GPIO_PIN_RESET。</li>
+</ul>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="参考代码-1"><a href="#参考代码-1" class="headerlink" title="参考代码"></a>参考代码</h3><h5 id="gpio-c"><a href="#gpio-c" class="headerlink" title="gpio.c"></a>gpio.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">MX_GPIO_Init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	GPIO_InitTypeDef GPIO_InitStruct = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">	__HAL_RCC_GPIOH_CLK_ENABLE();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	HAL_GPIO_WritePin(GPIOH, GPIO_PIN_10, GPIO_PIN_SET);</span><br><span class="line"></span><br><span class="line">	GPIO_InitStruct.Pin = GPIO_PIN_10;</span><br><span class="line">	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;</span><br><span class="line">	GPIO_InitStruct.Pull = GPIO_NOPULL;</span><br><span class="line">	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;</span><br><span class="line">	HAL_GPIO_Init(GPIOH, &amp;GPIO_InitStruct);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="main-c"><a href="#main-c" class="headerlink" title="main.c"></a>main.c</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	HAL_Init();</span><br><span class="line">	SystemClock_Config();</span><br><span class="line">	MX_GPIO_Init();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">		HAL_GPIO_TogglePin(GPIOH, GPIO_PIN_10);</span><br><span class="line">		HAL_Delay(<span class="number">500</span>);	 </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="STM32CubeMX"><a href="#STM32CubeMX" class="headerlink" title="STM32CubeMX"></a>STM32CubeMX</h1><h2 id="配置引脚为输出模式"><a href="#配置引脚为输出模式" class="headerlink" title="配置引脚为输出模式"></a>配置引脚为输出模式</h2><p>1.选中PH10引脚。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAZ4G7AAAgj-j3P68056.gif?token=null&ts=null" alt="img"></p>
+<p>2.配置PH10引脚为输出模式。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAB24_AAAfLYFwhr8831.png?token=null&ts=null" alt="img"></p>
+<p>3.再次详细配置PH10引脚。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAGzQ5AABLEiGV7Fs665.png?token=null&ts=null" alt="img"></p>
+<p>4.导出代码。</p>
+<h2 id="配置引脚为输入模式"><a href="#配置引脚为输入模式" class="headerlink" title="配置引脚为输入模式"></a>配置引脚为输入模式</h2><p>1.选中PA0引脚。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAM597AAAvtDoyfbI712.gif?token=null&ts=null" alt="img"></p>
+<p>2.配置PA0为输入模式。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAB24_AAAfLYFwhr8831.png?token=null&ts=null" alt="img"></p>
+<p>3.再次详细配置PA0引脚。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyABbcOAAATGRfOrt4371.png?token=null&ts=null" alt="img"></p>
+<p>4.导出代码。</p>
+<p><img src="http://edu.yueqian.com.cn/group1/M00/00/01/rBJlJmJidzyAb3yOAAAFZWAIeSI210.png?token=null&ts=null" alt="img"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2023/11/14/STM32%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9D%97/">http://example.com/2023/11/14/STM32%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9D%97/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/xixi.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/11/14/%E2%80%9C%E8%81%8A%E5%A4%A9%E5%AE%A4%EF%BC%88TCP%EF%BC%89%E2%80%9D/" title="“聊天室（TCP）”"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">“聊天室（TCP）”</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/xixi.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">John Doe</div><div class="author-info__description">手握日月摘心陈</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://www.4399.com/"><i class="iconfont icon-youxishoubing"></i><span>摸🦑</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xxxxx" target="_blank" title="Github"><i class="fab fa-github" style="color: #hdhfbb;"></i></a><a class="social-icon" href="mailto:xxxxxx@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #000000;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><b><font color="#e66b6d">双</font> <font color="#e66d98">手</font> <font color="#e66cc6">合</font> <font color="#cc6de6">十</font> <font color="#9770e6">成</font> <font color="#6d93e6">为</font> <font color="#6fcde6">自</font> <font color="#72e6b6">己</font> <font color="#72e689">的</font> <font color="#99e670">神</font>, <font color="#cde670">自</font> <font color="#e6df72">己</font> <font color="#e6c073">所</font> <font color="#e6a271">信</font> <font color="#e6796f">念</font> <font color="#e65454">的</font> <font color="#e63333">即</font> <font color="#e62c2c">是</font> <font color="#e60101">信</font> <font color="#e60101">仰</font></b> <p align="center"><img src="https://haiyong.site/img/img-blog.csdnimg.cn/f7384c88956d4378b72e47548e19c9f8.gif" width="50" alt="mao"></p> <p align="center">微信号：deximua</p> <p align="center">QQ号：2655675221</p></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#GPIO"><span class="toc-number">1.</span> <span class="toc-text">GPIO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GPIO%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">GPIO的工作模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">简述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E7%A7%8D%E8%BE%93%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">4种输入模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E7%A7%8D%E8%BE%93%E5%87%BA%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">4种输出模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E7%A7%8D%E6%9C%80%E5%A4%A7%E8%BE%93%E5%87%BA%E9%80%9F%E5%BA%A6"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">4种最大输出速度</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E6%83%85%E5%88%86%E6%9E%90"><span class="toc-number">1.2.2.</span> <span class="toc-text">详情分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">输出配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">输入配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%8D%E7%94%A8%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">复用功能配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">模拟配置</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="toc-number">1.3.</span> <span class="toc-text">原理图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E7%BC%96%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">寄存器编程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E8%BE%B9%E7%95%8C%E5%9C%B0%E5%9D%80"><span class="toc-number">1.5.</span> <span class="toc-text">寄存器边界地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.6.</span> <span class="toc-text">寄存器描述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E4%BB%A3%E7%A0%81"><span class="toc-number">1.6.1.</span> <span class="toc-text">参考代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E6%8E%A5%E5%8F%A3%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8"><span class="toc-number">1.7.</span> <span class="toc-text">函数接口以及使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E"><span class="toc-number">1.7.1.</span> <span class="toc-text">函数接口说明</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E6%97%B6%E9%92%9F%E4%BD%BF%E8%83%BD"><span class="toc-number">1.7.1.1.</span> <span class="toc-text">端口时钟使能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E9%85%8D%E7%BD%AE"><span class="toc-number">1.7.1.2.</span> <span class="toc-text">引脚配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E7%94%B5%E5%B9%B3%E8%BE%93%E5%87%BA"><span class="toc-number">1.7.1.3.</span> <span class="toc-text">引脚电平输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E7%94%B5%E5%B9%B3%E5%8F%8D%E8%BD%AC"><span class="toc-number">1.7.1.4.</span> <span class="toc-text">引脚电平反转</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E5%BC%95%E8%84%9A%E7%94%B5%E5%B9%B3"><span class="toc-number">1.7.1.5.</span> <span class="toc-text">读取引脚电平</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">1.8.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.8.1.</span> <span class="toc-text">参考代码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#gpio-c"><span class="toc-number">1.8.1.0.1.</span> <span class="toc-text">gpio.c</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#main-c"><span class="toc-number">1.8.1.0.2.</span> <span class="toc-text">main.c</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#STM32CubeMX"><span class="toc-number">2.</span> <span class="toc-text">STM32CubeMX</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%BC%95%E8%84%9A%E4%B8%BA%E8%BE%93%E5%87%BA%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">配置引脚为输出模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%BC%95%E8%84%9A%E4%B8%BA%E8%BE%93%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text">配置引脚为输入模式</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/14/STM32%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9D%97/" title="STM32学习模块">STM32学习模块</a><time datetime="2023-11-14T07:53:53.000Z" title="Created 2023-11-14 15:53:53">2023-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/14/%E2%80%9C%E8%81%8A%E5%A4%A9%E5%AE%A4%EF%BC%88TCP%EF%BC%89%E2%80%9D/" title="“聊天室（TCP）”">“聊天室（TCP）”</a><time datetime="2023-11-14T03:36:01.000Z" title="Created 2023-11-14 11:36:01">2023-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/10/QT%E7%AC%AC%E4%B8%80%E8%AF%BE/" title="xixitest">xixitest</a><time datetime="2023-11-10T03:27:03.000Z" title="Created 2023-11-10 11:27:03">2023-11-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/11/09/hello-world/" title="Hello World">Hello World</a><time datetime="2023-11-09T13:12:07.788Z" title="Created 2023-11-09 21:12:07">2023-11-09</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/default_top_img.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By John Doe</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><a class="icon-V hidden" onclick="switchNightMode()" title="Toggle Between Light And Dark Mode"><svg width="25" height="25" viewBox="0 0 1024 1024"><use id="modeicon" xlink:href="#icon-moon"></use></svg></a><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button><button class="share" type="button" title="右键模式" onclick="changeMouseMode()"><i class="fas fa-mouse"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div class="js-pjax" id="rightMenu"><div class="rightMenu-group rightMenu-small"><a class="rightMenu-item" href="javascript:window.history.back();"><i class="fa fa-arrow-left"></i></a><a class="rightMenu-item" href="javascript:window.history.forward();"><i class="fa fa-arrow-right"></i></a><a class="rightMenu-item" href="javascript:window.location.reload();"><i class="fa fa-refresh"></i></a><a class="rightMenu-item" href="javascript:rmf.scrollToTop();"><i class="fa fa-arrow-up"></i></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-text"><a class="rightMenu-item" href="javascript:rmf.copySelect();"><i class="fa fa-copy"></i><span>复制</span></a><a class="rightMenu-item" href="javascript:window.open(&quot;https://www.baidu.com/s?wd=&quot;+window.getSelection().toString());window.location.reload();"><i class="fa fa-search"></i><span>百度搜索</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-too"><a class="rightMenu-item" href="javascript:window.open(window.getSelection().toString());window.location.reload();"><i class="fa fa-link"></i><span>转到链接</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-paste"><a class="rightMenu-item" href="javascript:rmf.paste()"><i class="fa fa-copy"></i><span>粘贴</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-post"><a class="rightMenu-item" href="#post-comment"><i class="fas fa-comment"></i><span>空降评论</span></a><a class="rightMenu-item" href="javascript:rmf.copyWordsLink()"><i class="fa fa-link"></i><span>复制本文地址</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-to"><a class="rightMenu-item" href="javascript:rmf.openWithNewTab()"><i class="fa fa-window-restore"></i><span>新窗口打开</span></a><a class="rightMenu-item" id="menu-too" href="javascript:rmf.open()"><i class="fa fa-link"></i><span>转到链接</span></a><a class="rightMenu-item" href="javascript:rmf.copyLink()"><i class="fa fa-copy"></i><span>复制链接</span></a></div><div class="rightMenu-group rightMenu-line hide" id="menu-img"><a class="rightMenu-item" href="javascript:rmf.saveAs()"><i class="fa fa-download"></i><span>保存图片</span></a><a class="rightMenu-item" href="javascript:rmf.openWithNewTab()"><i class="fa fa-window-restore"></i><span>在新窗口打开</span></a><a class="rightMenu-item" href="javascript:rmf.copyLink()"><i class="fa fa-copy"></i><span>复制图片链接</span></a></div><div class="rightMenu-group rightMenu-line"><a class="rightMenu-item" href="/moyu/"><i class="fa fa-gamepad"></i><span>休闲游戏</span></a><a class="rightMenu-item" target="_blank" rel="noopener" href="https://tools.haiyong.site"><i class="fa fa-tools"></i><span>实用工具</span></a><a class="rightMenu-item" href="javascript:switchNightMode();"><i class="fa fa-moon"></i><span>昼夜切换</span></a><a class="rightMenu-item" href="javascript:changeMouseMode();"><i class="fa fa-mouse"></i><span>切换鼠标右键</span></a><a class="rightMenu-item" href="javascript:rmf.fullScreen();"><i class="fas fa-expand"></i><span>切换全屏</span></a><a class="rightMenu-item" href="javascript:window.print();"><i class="fa-solid fa-print"></i><span>打印页面</span></a></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script src="/js/sun_moon.js" async></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_clock_anzhiyu_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock_anzhiyu')
+    if(parent_div_git) {
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var qweather_key = 'b16a1fa0e63c46a4b8f28abfb06ae3fe';
+  var gaud_map_key = 'e2b04289e870b005374ee030148d64fd&s=rsv3';
+  var baidu_ak_key = 'undefined';
+  var flag = 0;
+  var clock_rectangle = '112.982279,28.19409';
+  var clock_default_rectangle_enable = 'true';
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  </script><script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script><script data-pjax src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.js"></script><!-- hexo injector body_end end --></body></html>
